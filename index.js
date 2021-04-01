@@ -22,9 +22,25 @@ client.connect((err) => {
   const productCollection = client.db("sunriseMart").collection("products");
   console.log("connection err", err);
 
+  app.get("/allProducts", (req, res) => {
+    productCollection.find().toArray((err, items) => {
+      res.send(items);
+    });
+  });
+
+  app.get("/manageProducts", (req, res) => {
+    productCollection.find().toArray((err, items) => {
+      res.send(items);
+    });
+  });
+
   app.post("/addProduct", (req, res) => {
     const newProduct = req.body;
     console.log("adding new product", newProduct);
+    productCollection.insertOne(newProduct).then((result) => {
+      console.log("inserted count", result.insertedCount);
+      res.send(result.insertedCount > 0);
+    });
   });
 });
 
