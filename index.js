@@ -7,7 +7,6 @@ require("dotenv").config();
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-// const objectid = require("objectid");
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -43,6 +42,10 @@ client.connect((err) => {
       console.log("inserted count", result.insertedCount);
       res.send(result.insertedCount > 0);
     });
+  });
+
+  app.delete("/delete/:id", (req, res) => {
+    console.log("deleted successfully", req.params.id);
   });
 
   app.post("/addOrder", (req, res) => {
