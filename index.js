@@ -7,6 +7,7 @@ require("dotenv").config();
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+// const objectid = require("objectid");
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -20,6 +21,7 @@ const client = new MongoClient(uri, {
 });
 client.connect((err) => {
   const productCollection = client.db("sunriseMart").collection("products");
+  const ordersCollection = client.db("sunriseMart").collection("orders");
   console.log("connection err", err);
 
   app.get("/allProducts", (req, res) => {
@@ -39,6 +41,15 @@ client.connect((err) => {
     console.log("adding new product", newProduct);
     productCollection.insertOne(newProduct).then((result) => {
       console.log("inserted count", result.insertedCount);
+      res.send(result.insertedCount > 0);
+    });
+  });
+
+  app.post("/addOrder", (req, res) => {
+    const order = req.body;
+    console.log(order);
+    ordersCollection.insertOne(order).then((result) => {
+      console.log(order, "order added");
       res.send(result.insertedCount > 0);
     });
   });
