@@ -1,6 +1,7 @@
 const express = require("express");
 const port = process.env.PORT || 5009;
 const MongoClient = require("mongodb").MongoClient;
+const ObjectId = require("mongodb").ObjectId;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 require("dotenv").config();
@@ -41,6 +42,21 @@ client.connect((err) => {
     productCollection.insertOne(newProduct).then((result) => {
       console.log("inserted count", result.insertedCount);
       res.send(result.insertedCount > 0);
+    });
+  });
+
+  app.get("/showProductById/:id", (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+    productCollection.find({ _id: ObjectId(id) }).toArray((err, documents) => {
+      res.send(documents[0]);
+    });
+  });
+
+  app.get("/showMyOrders/:email", (req, res) => {
+    const email = req.params.email;
+    ordersCollection.find({ email: email }).toArray((err, documents) => {
+      res.send(documents);
     });
   });
 
